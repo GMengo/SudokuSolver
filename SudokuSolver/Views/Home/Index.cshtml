@@ -1,0 +1,136 @@
+﻿@model SudokuSolver.Models.SudokuViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    .sudoku-container {
+        border: 3px solid black;
+        display: inline-block;
+    }
+
+    .sudoku-row {
+        display: flex;
+    }
+
+    .sudoku-cell {
+        width: 45px;
+        height: 45px;
+        text-align: center;
+        font-size: 20px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+        .sudoku-cell:nth-child(3), .sudoku-cell:nth-child(6) {
+            border-right: 3px solid black;
+        }
+
+    .sudoku-row:nth-child(3), .sudoku-row:nth-child(6) {
+        border-bottom: 3px solid black;
+    }
+
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 10px;
+    }
+    @@keyframes spin {
+        to
+
+    {
+        transform: rotate(3deg);
+    }
+
+    }
+
+    .alert {
+        display: inline-block;
+    }
+</style>
+
+<div class="text-center">
+    <h1 class="display-4">Sudoku Solver</h1>
+
+        <div class="my-4">
+        <span>Carica un esempio:</span>
+        <a asp-controller="Home" asp-action="Index" asp-route-difficulty="facile" class="btn btn-success">Facile</a>
+        <a asp-controller="Home" asp-action="Index" asp-route-difficulty="medio" class="btn btn-warning">Medio</a>
+        <a asp-controller="Home" asp-action="Index" asp-route-difficulty="difficile" class="btn btn-danger">Difficile</a>
+    </div>
+
+    <div style="margin-top: 25px;">
+        <form method="post" asp-controller="Home" asp-action="Index" id="sudoku-form">
+            <div class="sudoku-container">
+                @for (int i = 0; i < 9; i++)
+                {
+                    <div class="sudoku-row">
+                        @for (int j = 0; j < 9; j++)
+                        {
+                            <input asp-for="Grid[i][j]" class="sudoku-cell" type="text"
+                                   oninput="this.value = this.value.replace(/[^1-9]/g, '').slice(0, 1)"
+                                   autocomplete="off" />
+                        }
+                    </div>
+                }
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn btn-primary btn-lg" id="solve-button">Risolvi!</button>
+                <button type="button" class="btn btn-secondary btn-lg" id="reset-button">Azzera</button>
+            </div>
+        </form>
+
+        @if (ViewData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger mt-3" role="alert">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
+
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success mt-3" role="alert">
+                @ViewData["SuccessMessage"]
+            </div>
+        }
+
+    </div>
+</div>
+
+<script>
+    const sudokuForm = document.getElementById('sudoku-form');
+    sudokuForm.addEventListener('submit', function() {
+        const solveButton = document.getElementById('solve-button');
+        solveButton.disabled = true;
+        solveButton.innerHTML = '<span class="spinner"></span> Risolvendo...';
+    });
+
+    const resetButton = document.getElementById('reset-button');
+       resetButton.addEventListener('click', function() {
+           const cells = document.querySelectorAll('.sudoku-cell');
+           cells.forEach(cell => {
+               cell.value = '';
+           });
+
+           const alerts = document.querySelectorAll('.alert');
+           alerts.forEach(alert => {
+               alert.remove();
+           });
+       });
+</script>

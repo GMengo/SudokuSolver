@@ -1,0 +1,21 @@
+<svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <style>
+
+    .bg { fill: #FFFFFF; }
+    .grid-line { stroke: #000000; }
+
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #202124; }      /* Sfondo scuro */
+      .grid-line { stroke: #e8eaed; } /* Linee chiare */
+    }
+  </style>
+
+  <rect class="bg" width="100" height="100" rx="10" ry="10"/>
+  
+  <g class="grid-line" fill="none">
+
+    <rect x="15" y="15" width="70" height="70" stroke-width="5"/>
+    
+    <path d="M 38.3 15 V 85 M 61.6 15 V 85 M 15 38.3 H 85 M 15 61.6 H 85" stroke-width="2.5"/>
+  </g>
+</svg>
