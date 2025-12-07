@@ -11,24 +11,24 @@ namespace SudokuSolver.Models
         private readonly List<int[,]> _mediumPuzzles;
         private readonly List<int[,]> _hardPuzzles;
 
-  
+
         public SudokuRepository()
         {
             _easyPuzzles = new List<int[,]>
             {
-                
+
                 new int[,] {
                     { 5, 3, 0, 0, 7, 0, 0, 0, 0 }, { 6, 0, 0, 1, 9, 5, 0, 0, 0 }, { 0, 9, 8, 0, 0, 0, 0, 6, 0 },
                     { 8, 0, 0, 0, 6, 0, 0, 0, 3 }, { 4, 0, 0, 8, 0, 3, 0, 0, 1 }, { 7, 0, 0, 0, 2, 0, 0, 0, 6 },
                     { 0, 6, 0, 0, 0, 0, 2, 8, 0 }, { 0, 0, 0, 4, 1, 9, 0, 0, 5 }, { 0, 0, 0, 0, 8, 0, 0, 7, 9 }
                 },
-                
+
                 new int[,] {
                     { 0, 0, 0, 2, 6, 0, 7, 0, 1 }, { 6, 8, 0, 0, 7, 0, 0, 9, 0 }, { 1, 9, 0, 0, 0, 4, 5, 0, 0 },
                     { 8, 2, 0, 1, 0, 0, 0, 4, 0 }, { 0, 0, 4, 6, 0, 2, 9, 0, 0 }, { 0, 5, 0, 0, 0, 3, 0, 2, 8 },
                     { 0, 0, 9, 3, 0, 0, 0, 7, 4 }, { 0, 4, 0, 0, 5, 0, 0, 3, 6 }, { 7, 0, 3, 0, 1, 8, 0, 0, 0 }
                 },
-                
+
                 new int[,] {
                     { 0, 2, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 6, 0, 0, 0, 0, 3 }, { 0, 7, 4, 0, 8, 0, 0, 0, 0 },
                     { 0, 0, 0, 0, 0, 3, 0, 0, 2 }, { 0, 8, 0, 0, 4, 0, 0, 1, 0 }, { 6, 0, 0, 5, 0, 0, 0, 0, 0 },
@@ -64,13 +64,13 @@ namespace SudokuSolver.Models
                     { 0, 4, 5, 0, 0, 0, 0, 0, 0 }, { 0, 0, 3, 0, 0, 0, 0, 0, 0 }, { 0, 0, 6, 0, 0, 3, 0, 5, 4 },
                     { 0, 0, 0, 3, 2, 5, 0, 0, 6 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0 }
                 },
-                
+
                 new int[,] {
                     { 8, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 3, 6, 0, 0, 0, 0, 0 }, { 0, 7, 0, 0, 9, 0, 2, 0, 0 },
                     { 0, 5, 0, 0, 0, 7, 0, 0, 0 }, { 0, 0, 0, 0, 4, 5, 7, 0, 0 }, { 0, 0, 0, 1, 0, 0, 0, 3, 0 },
                     { 0, 0, 1, 0, 0, 0, 0, 6, 8 }, { 0, 0, 8, 5, 0, 0, 0, 1, 0 }, { 0, 9, 0, 0, 0, 0, 4, 0, 0 }
                 },
-                
+
                 new int[,] {
                     { 8, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 3, 6, 0, 0, 0, 0, 0 }, { 0, 7, 0, 0, 9, 0, 2, 0, 0 },
                     { 0, 5, 0, 0, 0, 7, 0, 0, 0 }, { 0, 0, 0, 0, 4, 5, 7, 0, 0 }, { 0, 0, 0, 1, 0, 0, 0, 3, 0 },
@@ -79,10 +79,8 @@ namespace SudokuSolver.Models
             };
         }
 
-
-        public List<List<int?>> GetSudoku(string difficulty)
+        public List<List<SudokuCell?>> GetSudoku(string difficulty)
         {
-
             var rand = new Random();
             List<int[,]> puzzleListToChooseFrom;
 
@@ -103,20 +101,29 @@ namespace SudokuSolver.Models
             int randomIndex = rand.Next(puzzleListToChooseFrom.Count);
             int[,] puzzleArray = puzzleListToChooseFrom[randomIndex];
 
-            var grid = new List<List<int?>>();
+            var grid = new List<List<SudokuCell>>();
+
             for (int i = 0; i < 9; i++)
             {
-                var row = new List<int?>();
+                var row = new List<SudokuCell>();
                 for (int j = 0; j < 9; j++)
                 {
-                    if (puzzleArray[i, j] == 0)
+                    int number = puzzleArray[i, j];
+
+                    var cell = new SudokuCell();
+
+                    if (number == 0)
                     {
-                        row.Add(null);
+                        cell.Value = null;
+                        cell.IsOriginal = false;
                     }
                     else
                     {
-                        row.Add(puzzleArray[i, j]);
+                        cell.Value = number;
+                        cell.IsOriginal = true; 
                     }
+
+                    row.Add(cell);
                 }
                 grid.Add(row);
             }
